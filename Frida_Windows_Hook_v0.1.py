@@ -20,7 +20,7 @@ var baseAddr = Module.findBaseAddress('ntdll.dll');
 
 //API offset(RVA)
 //var offset = '0x1460';
-//var hookAddr = baseAddr.add(offset);
+//const hookAddr = baseAddr.add(offset);
 
 //userFunc offset(RVA)
 //userFuncAddr = baseAddr + offset
@@ -57,7 +57,7 @@ Interceptor.attach(hookAddr, {
 
             // Return retval change
             /*
-            retval = 0;
+            retval.replace(0);
             console.log('[+] (forgery) typeof(retval) : ' + typeof(retval));
             console.log('[+] (forgery) retval : ' + retval);
             */
