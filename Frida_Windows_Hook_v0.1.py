@@ -89,44 +89,15 @@ Interceptor.attach(hookAddr, {
     function WriteMemory(info, addr, size) {
         if (addr.isNull())
             return;
-
+        
         console.log('Write Memory ' + info + ' :');
-        var buf = Memory.readByteArray(addr, size);
-        var data = new Uint8Array(buf);
-
-        //Calculate target byte code
-        var result = '';
-        var tmp_1 = '';
-        for (var i=0; i<size; i++){
-            //var tmp = String.fromCharCode(data[i] ^ xor_key[i].charCodeAt());
-            result += String.fromCharCode(data[i]);
-            //if(data == "vm");
-            if(data[i]==0x76){
-                if(data[i+2]==0x6D){
-                    tmp_1 += String.fromCharCode(data[i]);
-                    tmp_1 += String.fromCharCode(data[i+2]);
-                }
-            }
+        
+        for (var i=0x00; i<size; i++){
+            Memory.protect(addr.add(i), 0x01, "rwx");
+            Memory.writeByteArray(addr.add(i), [0x65]);
+            //point.push(addr.add(i));
+            console.log(addr.add(i));
         }
-        console.log(result);
-        console.log(tmp_1);
-
-        //if exist tmp_1, Write target byte code
-        if(tmp_1!=''){
-            for (var j=0x00; j<size; j++){
-                var buf_2 = Memory.readByteArray(addr.add(j), 0x01);
-                var data_2 = new Uint8Array(buf_2);
-                if(data_2[0] == 0x76){
-                    //console.log(String.fromCharCode(data_2[0]));
-                    Memory.protect(addr.add(j), 0x01, "rwx");
-                    Memory.writeByteArray(addr.add(j), [0x65]);
-                    //point.push(addr.add(j));
-                    console.log(addr.add(j));
-                }
-            }
-        }
-            // For example 0.05 to sleep for 50 ms.
-            // Thread.sleep(1000);
     }
 
     function ResolveAddr(addr) {
